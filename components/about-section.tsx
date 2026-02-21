@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import { motion, useScroll, useTransform, useInView } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 
 const stats = [
   { value: "4+", label: "Years Experience" },
@@ -13,20 +13,8 @@ export function AboutSection() {
   const textRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(textRef, { once: true, margin: "-100px" })
 
-  const { scrollYProgress } = useScroll()
-
-  const bgTextX = useTransform(scrollYProgress, [0, 1], ["10%", "-30%"])
-
   return (
     <section id="about" ref={ref} style={{ position: "relative" }} className="overflow-hidden px-6 py-32 md:px-12">
-      {/* Floating background text */}
-      <motion.div
-        className="pointer-events-none absolute top-1/2 left-0 -translate-y-1/2 whitespace-nowrap font-mono text-[clamp(6rem,15vw,14rem)] font-bold text-foreground/[0.02] uppercase select-none"
-        style={{ x: bgTextX }}
-      >
-        Motion is Emotion
-      </motion.div>
-
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="mb-20 flex flex-col gap-12 md:flex-row">
           {/* Left label */}
