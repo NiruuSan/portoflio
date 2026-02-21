@@ -8,11 +8,17 @@ import { ProcessSection } from "@/components/process-section"
 import { ReelSection } from "@/components/reel-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
+import { getGlobalContent, getProjects, getShortProjects } from "@/lib/content"
 
-export default function Page() {
+export default async function Page() {
+  const [globalContent, projects, shortProjects] = await Promise.all([
+    getGlobalContent(),
+    getProjects(),
+    getShortProjects(),
+  ])
+
   return (
     <main className="relative min-h-screen cursor-none text-foreground md:cursor-none">
-      {/* Full-page grid background */}
       <div
         className="fixed inset-0 -z-10 pointer-events-none opacity-[0.08]"
         style={{
@@ -23,13 +29,13 @@ export default function Page() {
       />
       <MagneticCursor />
       <Navigation />
-      <HeroSection />
-      <MarqueeSection />
+      <HeroSection content={globalContent.hero} />
+      <MarqueeSection skills={globalContent.marquee.skills} />
       <ReelSection />
-      <ProjectsSection />
-      <AboutSection />
+      <ProjectsSection projects={projects} shortProjects={shortProjects} />
+      <AboutSection content={globalContent.about} />
       <ProcessSection />
-      <ContactSection />
+      <ContactSection content={globalContent.contact} />
       <Footer />
     </main>
   )

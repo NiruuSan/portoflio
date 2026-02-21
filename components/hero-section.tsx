@@ -3,9 +3,12 @@
 import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 
-const nameLetters = "NEIL BISSAUD".split("")
-
-export function HeroSection() {
+export function HeroSection({
+  content,
+}: {
+  content: { name: string; tagline: string; subtitle: string }
+}) {
+  const nameLetters = content.name.split("")
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
     offset: ["start start", "end start"],
@@ -38,7 +41,7 @@ export function HeroSection() {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
           </span>
           <span className="text-xs tracking-[0.3em] text-muted-foreground uppercase">
-            Available for projects
+            {content.tagline}
           </span>
         </motion.div>
 
@@ -74,7 +77,7 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
         >
-          Motion Designer / After Effects / Unreal Engine
+          {content.subtitle}
         </motion.p>
 
       </motion.div>

@@ -3,12 +3,16 @@
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 
-const stats = [
-  { value: "4+", label: "Years Experience" },
-  { value: "6+", label: "Tools Mastered" },
-]
-
-export function AboutSection() {
+export function AboutSection({
+  content,
+}: {
+  content: {
+    heading: string
+    description: string
+    descriptionSecondary: string
+    stats: { value: string; label: string }[]
+  }
+}) {
   const ref = useRef<HTMLElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(textRef, { once: true, margin: "-100px" })
@@ -20,7 +24,7 @@ export function AboutSection() {
           {/* Left label */}
           <div className="md:w-1/3">
             <span className="text-xs tracking-[0.3em] text-accent uppercase">
-              About
+              {content.heading}
             </span>
           </div>
 
@@ -33,23 +37,17 @@ export function AboutSection() {
             transition={{ duration: 0.8 }}
           >
             <p className="text-2xl leading-relaxed text-foreground md:text-3xl">
-              I craft{" "}
-              <span className="text-accent">visual narratives</span> that move
-              people. With 4+ years of hands-on experience across{" "}
-              <span className="text-accent">After Effects, Unreal Engine, and beyond</span>,
-              I transform ideas into cinematic motion.
+              {content.description}
             </p>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              From logo animations and brand films to short-form social content
-              and 3D real-time environments, I bring versatility and craft to
-              every project. Every frame is an opportunity to tell a story.
+              {content.descriptionSecondary}
             </p>
           </motion.div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-px border border-border bg-border">
-          {stats.map((stat, i) => (
+          {content.stats.map((stat, i) => (
             <motion.div
               key={stat.label}
               className="flex flex-col items-center gap-2 bg-background p-8 md:p-12"

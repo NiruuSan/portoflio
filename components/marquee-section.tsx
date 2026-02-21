@@ -1,16 +1,5 @@
 "use client"
 
-const skills = [
-  "After Effects",
-  "Unreal Engine",
-  "Motion Design",
-  "3D Animation",
-  "Logo Animation",
-  "Short Film",
-  "Video Editing",
-  "Social Content",
-]
-
 function MarqueeRow({
   items,
   direction,
@@ -44,7 +33,7 @@ function MarqueeRow({
   )
 }
 
-export function MarqueeSection() {
+export function MarqueeSection({ skills }: { skills: string[] }) {
   return (
     <section className="relative overflow-hidden border-y border-border/50 py-6">
       <MarqueeRow items={skills} direction="left" />

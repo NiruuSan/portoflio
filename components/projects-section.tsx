@@ -4,91 +4,21 @@ import { useRef, useState, useEffect } from "react"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
 import Image from "next/image"
 
-const projects = [
-  {
-    title: "Unreal Engine 3D",
-    category: "3D / Real-Time",
-    year: "2025",
-    image: "/images/project-1.jpg",
-    videoId: "u3t-p3PoKxA",
-    description:
-      "Immersive 3D environment built in Unreal Engine. 5 days school project.",
-    isShort: false,
-  },
-  {
-    title: "42 2026 Wishcard",
-    category: "After Effects",
-    year: "2025",
-    image: "/images/project-2.jpg",
-    videoId: "2_C_abdWgTg",
-    description:
-      "Intro for a 2 minute Wishcard animation. This project was then discontinued.",
-    isShort: false,
-  },
-  {
-    title: "42 2025 Recap",
-    category: "After Effects",
-    year: "2025",
-    image: "/images/project-3.jpg",
-    videoId: "nRfecDuItQw",
-    description:
-      "A recap of 42's 2025 year in statistics through motion design and 3D.",
-    isShort: false,
-  },
-  {
-    title: "42 Logo Animation",
-    category: "After Effects / Branding",
-    year: "2025",
-    image: "/images/project-4.jpg",
-    videoId: "XORIXUNWavM",
-    description:
-      "Latest 42 logo animation in motion design.",
-    isShort: false,
-  },
-  {
-    title: "Fake Trailer",
-    category: "Short Film",
-    year: "2024",
-    image: "/images/project-5.jpg",
-    videoId: "SDwz8tQog50",
-    description:
-      "Cinematic fake trailer for the game Lethal Company made for a school project.",
-    isShort: false,
-  },
-  {
-    title: "6 Invitationals",
-    category: "Short Content / Edit",
-    year: "2026",
-    image: "/images/project-6.jpg",
-    videoId: "eso05llDzW0",
-    description:
-      "TikTok styled edit for Adidas Arena.",
-    isShort: true,
-  },
-]
+export interface Project {
+  title: string
+  category: string
+  year: string
+  image: string
+  videoId: string
+  description: string
+  isShort: boolean
+}
 
-const shortProjects = [
-  {
-    title: "Fake TCG App",
-    videoId: "tfQI4J-i-EY",
-    category: "Animation",
-  },
-  {
-    title: "Instagram Reel I",
-    videoId: "r3QoufEWX0o",
-    category: "Social Content",
-  },
-  {
-    title: "Instagram Reel II",
-    videoId: "2_4HJufjD6Q",
-    category: "Social Content",
-  },
-  {
-    title: "TikTok Short",
-    videoId: "PgXdU2Kk-vE",
-    category: "Short Content",
-  },
-]
+export interface ShortProject {
+  title: string
+  videoId: string
+  category: string
+}
 
 function VideoEmbed({
   videoId,
@@ -158,7 +88,7 @@ function ProjectCard({
   project,
   index,
 }: {
-  project: (typeof projects)[0]
+  project: Project
   index: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -251,7 +181,13 @@ function ProjectCard({
   )
 }
 
-export function ProjectsSection() {
+export function ProjectsSection({
+  projects,
+  shortProjects,
+}: {
+  projects: Project[]
+  shortProjects: ShortProject[]
+}) {
   const headerRef = useRef<HTMLDivElement>(null)
   const isHeaderInView = useInView(headerRef, { once: true, margin: "-100px" })
   const shortsRef = useRef<HTMLDivElement>(null)
@@ -277,15 +213,13 @@ export function ProjectsSection() {
             </h2>
           </div>
           <span className="hidden text-sm text-muted-foreground md:block">
-            {"(10)"}
+            ({projects.length + shortProjects.length})
           </span>
         </motion.div>
 
         {/* Featured project grid */}
         <div className="flex flex-col gap-24 md:gap-32">
-          {[...projects]
-            .sort((a, b) => Number(b.year) - Number(a.year))
-            .map((project, index) => (
+          {projects.map((project, index) => (
               <ProjectCard key={project.title} project={project} index={index} />
             ))}
         </div>
@@ -322,7 +256,7 @@ function ShortCard({
   short,
   index,
 }: {
-  short: (typeof shortProjects)[0]
+  short: ShortProject
   index: number
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
