@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
 import Image from "next/image"
 
@@ -100,38 +100,57 @@ function VideoEmbed({
   isShort: boolean
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wasInView = useRef(false)
+  const isInView = useInView(containerRef, { amount: 0.5, once: false })
+
+  useEffect(() => {
+    if (isPlaying) {
+      if (wasInView.current && !isInView) {
+        setIsPlaying(false)
+      }
+      wasInView.current = isInView
+    } else {
+      wasInView.current = false
+    }
+  }, [isPlaying, isInView])
+
   const baseUrl = isShort
     ? `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=1`
     : `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1`
 
   if (!isPlaying) {
     return (
-      <button
-        onClick={() => setIsPlaying(true)}
-        className="group/play absolute inset-0 flex cursor-pointer items-center justify-center"
-        aria-label={`Play ${title}`}
-      >
-        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/50 bg-background/60 backdrop-blur-sm transition-all duration-300 group-hover/play:scale-110 group-hover/play:border-accent group-hover/play:bg-accent/20">
-          <svg
-            className="ml-1 h-5 w-5 text-accent"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
-      </button>
+      <div ref={containerRef} className="absolute inset-0">
+        <button
+          onClick={() => setIsPlaying(true)}
+          className="group/play flex h-full w-full cursor-pointer items-center justify-center"
+          aria-label={`Play ${title}`}
+        >
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/50 bg-background/60 backdrop-blur-sm transition-all duration-300 group-hover/play:scale-110 group-hover/play:border-accent group-hover/play:bg-accent/20">
+            <svg
+              className="ml-1 h-5 w-5 text-accent"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </button>
+      </div>
     )
   }
 
   return (
-    <iframe
-      src={baseUrl}
-      title={title}
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      className="absolute inset-0 h-full w-full"
-    />
+    <div ref={containerRef} className="absolute inset-0">
+      <iframe
+        src={baseUrl}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="h-full w-full"
+      />
+    </div>
   )
 }
 
@@ -307,9 +326,24 @@ function ShortCard({
   index: number
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wasInView = useRef(false)
+  const isInView = useInView(containerRef, { amount: 0.5, once: false })
+
+  useEffect(() => {
+    if (isPlaying) {
+      if (wasInView.current && !isInView) {
+        setIsPlaying(false)
+      }
+      wasInView.current = isInView
+    } else {
+      wasInView.current = false
+    }
+  }, [isPlaying, isInView])
 
   return (
     <motion.div
+      ref={containerRef}
       className="group relative aspect-[9/16] overflow-hidden rounded-lg bg-secondary"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}

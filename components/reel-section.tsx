@@ -1,12 +1,29 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 
 export function ReelSection() {
   const ref = useRef<HTMLElement>(null)
+  const videoRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const { scrollYProgress } = useScroll()
+
+  useEffect(() => {
+    if (!isPlaying || !videoRef.current) return
+
+    const el = videoRef.current
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setIsPlaying(false)
+        }
+      },
+      { threshold: 0.25, rootMargin: "0px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [isPlaying])
 
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 360])
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8])
@@ -27,7 +44,10 @@ export function ReelSection() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-secondary">
+          <div
+            ref={videoRef}
+            className="relative aspect-video w-full overflow-hidden rounded-lg bg-secondary"
+          >
             <iframe
               src="https://www.youtube.com/embed/3Zi4yo67Ahk?autoplay=1&controls=1"
               title="Neil Bissaud - Showreel"
