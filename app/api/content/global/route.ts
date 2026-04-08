@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { verifyAuth } from "@/lib/auth"
+import { githubWriteFile } from "@/lib/github"
 
 const contentPath = path.join(process.cwd(), "content", "global.json")
 
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
   }
   try {
     const body = await request.json()
-    fs.writeFileSync(contentPath, JSON.stringify(body, null, 2), "utf-8")
+    await githubWriteFile("content/global.json", body, "Update global content")
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ error: "Failed to save content" }, { status: 500 })

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { verifyAuth } from "@/lib/auth"
+import { githubWriteFile } from "@/lib/github"
 
 const projectsDir = path.join(process.cwd(), "content", "projects")
 
@@ -36,8 +37,7 @@ export async function POST(request: Request) {
   try {
     const project = await request.json()
     const id = slugify(project.title)
-    const filePath = path.join(projectsDir, `${id}.json`)
-    fs.writeFileSync(filePath, JSON.stringify(project, null, 2), "utf-8")
+    await githubWriteFile(`content/projects/${id}.json`, project, `Add project: ${project.title}`)
     return NextResponse.json({ success: true, id })
   } catch (err) {
     return NextResponse.json({ error: "Failed to save project" }, { status: 500 })

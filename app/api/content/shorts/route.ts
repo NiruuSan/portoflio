@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { verifyAuth } from "@/lib/auth"
+import { githubWriteFile } from "@/lib/github"
 
 const shortsDir = path.join(process.cwd(), "content", "shorts")
 
@@ -36,8 +37,7 @@ export async function POST(request: Request) {
   try {
     const short = await request.json()
     const id = slugify(short.title)
-    const filePath = path.join(shortsDir, `${id}.json`)
-    fs.writeFileSync(filePath, JSON.stringify(short, null, 2), "utf-8")
+    await githubWriteFile(`content/shorts/${id}.json`, short, `Add short: ${short.title}`)
     return NextResponse.json({ success: true, id })
   } catch (err) {
     return NextResponse.json({ error: "Failed to save short" }, { status: 500 })

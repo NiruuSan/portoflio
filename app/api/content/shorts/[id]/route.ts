@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 import { verifyAuth } from "@/lib/auth"
-
-const shortsDir = path.join(process.cwd(), "content", "shorts")
+import { githubWriteFile, githubDeleteFile, githubFileExists } from "@/lib/github"
 
 export async function PUT(
   request: Request,
@@ -15,11 +12,11 @@ export async function PUT(
   try {
     const { id } = await params
     const short = await request.json()
-    const filePath = path.join(shortsDir, `${id}.json`)
-    if (!fs.existsSync(filePath)) {
+    const ghPath = `content/shorts/${id}.json`
+    if (!(await githubFileExists(ghPath))) {
       return NextResponse.json({ error: "Short not found" }, { status: 404 })
     }
-    fs.writeFileSync(filePath, JSON.stringify(short, null, 2), "utf-8")
+    await githubWriteFile(ghPath, short, `Update short: ${id}`)
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ error: "Failed to update short" }, { status: 500 })
@@ -35,11 +32,11 @@ export async function DELETE(
   }
   try {
     const { id } = await params
-    const filePath = path.join(shortsDir, `${id}.json`)
-    if (!fs.existsSync(filePath)) {
+    const ghPath = `content/shorts/${id}.json`
+    if (!(await githubFileExists(ghPath))) {
       return NextResponse.json({ error: "Short not found" }, { status: 404 })
     }
-    fs.unlinkSync(filePath)
+    await githubDeleteFile(ghPath, `Delete short: ${id}`)
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ error: "Failed to delete short" }, { status: 500 })

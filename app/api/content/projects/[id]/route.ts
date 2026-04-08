@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { verifyAuth } from "@/lib/auth"
+import { githubWriteFile, githubDeleteFile, githubFileExists } from "@/lib/github"
 
 const projectsDir = path.join(process.cwd(), "content", "projects")
 
@@ -35,11 +36,11 @@ export async function PUT(
   try {
     const { id } = await params
     const project = await request.json()
-    const filePath = path.join(projectsDir, `${id}.json`)
-    if (!fs.existsSync(filePath)) {
+    const ghPath = `content/projects/${id}.json`
+    if (!(await githubFileExists(ghPath))) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
-    fs.writeFileSync(filePath, JSON.stringify(project, null, 2), "utf-8")
+    await githubWriteFile(ghPath, project, `Update project: ${id}`)
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ error: "Failed to update project" }, { status: 500 })
@@ -55,11 +56,11 @@ export async function DELETE(
   }
   try {
     const { id } = await params
-    const filePath = path.join(projectsDir, `${id}.json`)
-    if (!fs.existsSync(filePath)) {
+    const ghPath = `content/projects/${id}.json`
+    if (!(await githubFileExists(ghPath))) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
-    fs.unlinkSync(filePath)
+    await githubDeleteFile(ghPath, `Delete project: ${id}`)
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ error: "Failed to delete project" }, { status: 500 })
