@@ -46,6 +46,20 @@ interface ShortProject {
 
 const fetchOpts = { credentials: "include" as const }
 
+function extractVideoId(input: string): string {
+  // youtu.be/<id>
+  const short = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/)
+  if (short) return short[1]
+  // youtube.com/shorts/<id>
+  const shorts = input.match(/shorts\/([a-zA-Z0-9_-]{11})/)
+  if (shorts) return shorts[1]
+  // youtube.com/watch?v=<id>
+  const watch = input.match(/[?&]v=([a-zA-Z0-9_-]{11})/)
+  if (watch) return watch[1]
+  // already an ID
+  return input.trim()
+}
+
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null)
   const [password, setPassword] = useState("")
@@ -553,11 +567,11 @@ export default function AdminPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>YouTube Video ID</Label>
+                      <Label>YouTube Video ID or URL</Label>
                       <Input
-                        placeholder="e.g. dQw4w9WgXcQ"
+                        placeholder="e.g. dQw4w9WgXcQ or full URL"
                         value={newProject.videoId || ""}
-                        onChange={(e) => setNewProject({ ...newProject, videoId: e.target.value })}
+                        onChange={(e) => setNewProject({ ...newProject, videoId: extractVideoId(e.target.value) })}
                       />
                     </div>
                   </div>
@@ -662,12 +676,12 @@ export default function AdminPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Video ID</Label>
+                          <Label>Video ID or URL</Label>
                           <Input
                             value={project.videoId}
                             onChange={(e) =>
                               setProjects(
-                                projects.map((p) => (p.id === project.id ? { ...p, videoId: e.target.value } : p))
+                                projects.map((p) => (p.id === project.id ? { ...p, videoId: extractVideoId(e.target.value) } : p))
                               )
                             }
                           />
@@ -730,11 +744,11 @@ export default function AdminPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>YouTube Video ID</Label>
+                      <Label>YouTube Video ID or URL</Label>
                       <Input
-                        placeholder="e.g. dQw4w9WgXcQ"
+                        placeholder="e.g. dQw4w9WgXcQ or full URL"
                         value={newShort.videoId || ""}
-                        onChange={(e) => setNewShort({ ...newShort, videoId: e.target.value })}
+                        onChange={(e) => setNewShort({ ...newShort, videoId: extractVideoId(e.target.value) })}
                       />
                     </div>
                     <div className="space-y-2">
@@ -801,11 +815,11 @@ export default function AdminPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Video ID</Label>
+                          <Label>Video ID or URL</Label>
                           <Input
                             value={short.videoId}
                             onChange={(e) =>
-                              setShorts(shorts.map((s) => (s.id === short.id ? { ...s, videoId: e.target.value } : s)))
+                              setShorts(shorts.map((s) => (s.id === short.id ? { ...s, videoId: extractVideoId(e.target.value) } : s)))
                             }
                           />
                         </div>
