@@ -2,15 +2,21 @@
   "hero": {
     "name": "NEIL BISSAUD",
     "tagline": "Available for projects",
-    "subtitle": "Motion Designer / After Effects / Unreal Engine"
+    "subtitle": "Motion Designer / After Effects"
   },
   "about": {
     "heading": "About",
     "description": "I craft visual narratives that move people. With 4+ years of hands-on experience across After Effects, Unreal Engine, and beyond, I transform ideas into cinematic motion.",
     "descriptionSecondary": "From logo animations and brand films to short-form social content and 3D real-time environments, I bring versatility and craft to every project. Every frame is an opportunity to tell a story.",
     "stats": [
-      { "value": "4+", "label": "Years Experience" },
-      { "value": "6+", "label": "Tools Mastered" }
+      {
+        "value": "4+",
+        "label": "Years Experience"
+      },
+      {
+        "value": "6+",
+        "label": "Tools Mastered"
+      }
     ]
   },
   "contact": {
@@ -18,12 +24,27 @@
     "description": "Have a project in mind? I'd love to hear about it. Drop me a line and let's bring your vision to life.",
     "email": "neilbissaud@gmail.com",
     "socialLinks": [
-      { "label": "Instagram", "href": "https://www.instagram.com/kitsufx/" },
-      { "label": "LinkedIn", "href": "https://www.linkedin.com/in/neilbissaud/" }
+      {
+        "label": "Instagram",
+        "href": "https://www.instagram.com/kitsufx/"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/neilbissaud/"
+      }
     ]
   },
   "marquee": {
-    "skills": ["After Effects", "Unreal Engine", "Motion Design", "3D Animation", "Logo Animation", "Short Film", "Video Editing", "Social Content"]
+    "skills": [
+      "After Effects",
+      "Unreal Engine",
+      "Motion Design",
+      "3D Animation",
+      "Logo Animation",
+      "Short Film",
+      "Video Editing",
+      "Social Content"
+    ]
   },
   "metadata": {
     "title": "Neil Bissaud - Motion Designer",
